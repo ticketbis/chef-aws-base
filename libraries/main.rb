@@ -1,8 +1,8 @@
 
 class Chef
   class AwsEc2
-    def self.get_client(access_key_id, secret_access_key, region)
-      Aws::EC2::Client.new region: region, credentials: Aws::Credentials.new(access_key_id, secret_access_key)
+    def self.get_client(credentials, region)
+      Aws::EC2::Client.new(region: region, credentials: credentials)
     end
 
     def self.get_vpc(name, client)
@@ -55,8 +55,8 @@ class Chef
       end
     end
 
-    def self.get_iam_client(access_key_id, secret_access_key, region)
-      Aws::IAM::Client.new region: region, credentials: Aws::Credentials.new(access_key_id, secret_access_key)
+    def self.get_iam_client(credentials, region)
+      Aws::IAM::Client.new region: region, credentials: credentials
     end
 
     def self.get_certificate(name, client)
@@ -69,8 +69,8 @@ class Chef
       end
     end
 
-    def self.get_elb_client(access_key_id, secret_access_key, region)
-      Aws::ElasticLoadBalancing::Client.new region: region, credentials: Aws::Credentials.new(access_key_id, secret_access_key)
+    def self.get_elb_client(credentials, region)
+      Aws::ElasticLoadBalancing::Client.new region: region, credentials: credentials
     end
 
   end
