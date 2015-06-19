@@ -49,6 +49,12 @@ class Chef
       vpc.security_groups.select { |s| s.group_name == name }.first
     end
 
+    def self.get_keypair(name, client=nil)
+      begin client.describe_key_pairs(key_names: [name]).key_pairs.first
+      rescue Aws::EC2::Errors::InvalidKeyPairNotFound
+      end
+    end
+
     def self.get_iam_client(access_key_id, secret_access_key, region)
       Aws::IAM::Client.new region: region, credentials: Aws::Credentials.new(access_key_id, secret_access_key)
     end
