@@ -1,8 +1,27 @@
 
 class Chef
   class AwsEc2
-    def self.get_client(access_key_id, secret_access_key, region)
-      Aws::EC2::Client.new region: region, credentials: Aws::Credentials.new(access_key_id, secret_access_key)
+
+    module Credentials
+      def aws_credentials
+        access_key_id = new_resource.access_key_id
+        access_key_id = node[:aws][:_t][:access_key_id] unless node[:aws].nil? and node[:aws][:_t].nil? or node[:aws][:_t][:access_key_id].nil?
+        access_key_id = node[:aws][:access_key_id] unless node[:aws].nil? or node[:aws][:access_key_id].nil?
+        secret_access_key = new_resource.secret_access_key
+        secret_access_key = node[:aws][:_t][:secret_access_key] unless node[:aws].nil? and node[:aws][:_t].nil? or node[:aws][:_t][:secret_access_key].nil?
+        secret_access_key = node[:aws][:secret_access_key] unless node[:aws].nil? or node[:aws][:secret_access_key].nil?
+        Aws::Credentials.new(access_key_id, secret_access_key)
+      end
+      def aws_region
+        r = new_resource.region
+        r = node[:aws][:_t][:region] unless node[:aws].nil? or node[:aws][:_t].nil? or node[:aws][:_t][:region].nil?
+        r = node[:aws][:region] unless node[:aws].nil? or node[:aws][:region].nil?
+        r
+      end
+    end
+
+    def self.get_client(credentials, region)
+      Aws::EC2::Client.new(region: region, credentials: credentials)
     end
 
     def self.get_vpc(name, client)
@@ -55,8 +74,8 @@ class Chef
       end
     end
 
-    def self.get_iam_client(access_key_id, secret_access_key, region)
-      Aws::IAM::Client.new region: region, credentials: Aws::Credentials.new(access_key_id, secret_access_key)
+    def self.get_iam_client(credentials, region)
+      Aws::IAM::Client.new region: region, credentials: credentials
     end
 
     def self.get_certificate(name, client)
@@ -69,8 +88,8 @@ class Chef
       end
     end
 
-    def self.get_elb_client(access_key_id, secret_access_key, region)
-      Aws::ElasticLoadBalancing::Client.new region: region, credentials: Aws::Credentials.new(access_key_id, secret_access_key)
+    def self.get_elb_client(credentials, region)
+      Aws::ElasticLoadBalancing::Client.new region: region, credentials: credentials
     end
 
   end
