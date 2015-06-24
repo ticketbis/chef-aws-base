@@ -75,13 +75,9 @@ class Chef
       end
     end
 
-    def self.get_instance(name, client)
-      t = client.describe_instances(filters: [{name: 'tag:Name', values: [name]}])
-      fail "There are more than one instance named '#{name}'" if t.reservations.length > 1
-      return nil if t.reservations.length < 1
-      fail "There are more than one instance named '#{name}'" if t.reservations.first.instances.length > 1
-      return nil if t.reservations.first.instances.length < 1
-      Aws::EC2::Instance.new(id: t.reservations.first.instances.first.instance_id, client: client) unless t.nil?
+    def self.get_instance(name, subnet)
+      return nil if subnet.nil?
+      subnet.instances.select{|i| i.tags.any?{|t| t.key == 'Name' and t.value == name}}.first
     end
 
     def self.get_iam_client(credentials, region)
