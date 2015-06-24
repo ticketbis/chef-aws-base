@@ -25,6 +25,7 @@ class Chef
     end
 
     def self.get_vpc(name, client)
+      return nil unless client
       vpc = client.describe_vpcs(filters: [{ name: 'tag:Name', values: [name] }])[:vpcs].first
       return Aws::EC2::Vpc.new vpc[:vpc_id], client: client unless vpc.nil?
       nil
