@@ -4,16 +4,16 @@ class Chef
 
     module Credentials
       def aws_credentials
-        access_key_id = new_resource.access_key_id
+        access_key_id = new_resource.access_key_id unless new_resource.nil?
         access_key_id = node[:aws][:_t][:access_key_id] unless node[:aws].nil? and node[:aws][:_t].nil? or node[:aws][:_t][:access_key_id].nil?
         access_key_id = node[:aws][:access_key_id] unless node[:aws].nil? or node[:aws][:access_key_id].nil?
-        secret_access_key = new_resource.secret_access_key
+        secret_access_key = new_resource.secret_access_key unless new_resource.nil?
         secret_access_key = node[:aws][:_t][:secret_access_key] unless node[:aws].nil? and node[:aws][:_t].nil? or node[:aws][:_t][:secret_access_key].nil?
         secret_access_key = node[:aws][:secret_access_key] unless node[:aws].nil? or node[:aws][:secret_access_key].nil?
         Aws::Credentials.new(access_key_id, secret_access_key)
       end
       def aws_region
-        r = new_resource.region
+        r = new_resource.region unless new_resource.nil?
         r = node[:aws][:_t][:region] unless node[:aws].nil? or node[:aws][:_t].nil? or node[:aws][:_t][:region].nil?
         r = node[:aws][:region] unless node[:aws].nil? or node[:aws][:region].nil?
         r
