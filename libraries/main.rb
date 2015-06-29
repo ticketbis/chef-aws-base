@@ -62,6 +62,15 @@ class Chef
       end.first
     end
 
+    def self.get_free_eip client, allow_create=true
+      return nil unless client.instance_of? Aws::EC2::Client
+      free = client.describe_addresses(filters: [{ name: 'domain', values: ['vpc'] }]).addresses.find{|a| a.association_id.nil?}
+      return free unless free.nil?
+      return nil unless allow_create
+      a = client.allocate_address(domain: 'vpc')
+      client.describe_addresses(allocation_ids: [a.allocation_id]).addresses.first
+    end
+
     def self.get_security_group vpc, name, client=nil
       fail "Client needed if VPC name passed" if vpc.instance_of?(String) && !client
       vpc = get_vpc vpc, client if vpc.instance_of? String
