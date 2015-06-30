@@ -89,6 +89,20 @@ class Chef
       subnet.instances.select{|i| i.tags.any?{|t| t.key == 'Name' and t.value == name}}.first
     end
 
+    def self.get_image(region, name)
+      return nil if region.nil? or name.nil?
+      return name if /^ami-/ =~ name
+      res = case name.to_s
+      when 'nat'
+        case region
+        when 'us-east-1' then 'ami-b0210ed8'
+        when 'eu-west-1' then 'ami-ef76e898'
+        end
+      end
+      fail "Cannot found image '#{name.to_s}' in region '#{region}'" if res.nil?
+      res
+    end
+
     def self.get_iam_client(credentials, region)
       Aws::IAM::Client.new region: region, credentials: credentials
     end
