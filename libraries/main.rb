@@ -121,6 +121,9 @@ class Chef
       Aws::ElasticLoadBalancing::Client.new region: region, credentials: credentials
     end
 
+    def self.get_route53_client(credentials, region)
+      Aws::Route53::Client.new(region: region, credentials: credentials)
+    end
   end
 end
 
