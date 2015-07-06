@@ -45,6 +45,20 @@ class Chef
         nil
       end
 
+      def get_tag(resource, tag)
+        return nil unless resource.respond_to? :tags
+        require 'json'
+        t = resource.tags.find{|t| t.key == tag}
+        return nil if t.nil?
+        JSON.parse(t.value)
+      end
+
+      def set_tag(resource, tag, value)
+        return nil unless resource.respond_to? :create_tags
+        require 'json'
+        resource.create_tags(tags: [{key: tag, value: JSON.generate(value)}])
+      end
+
       def get_route_table(vpc, name, client = nil)
         fail "Client needed if VPC name passed" if vpc.instance_of?(String) && !client
         vpc = get_vpc vpc, client if vpc.instance_of? String
