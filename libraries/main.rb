@@ -136,6 +136,12 @@ class Chef
         Aws::ElasticLoadBalancing::Client.new region: region, credentials: credentials
       end
 
+      def get_elb(name, client)
+        begin client.describe_load_balancers(load_balancer_names: [name], page_size: 1).load_balancer_descriptions.first
+        rescue Aws::ElasticLoadBalancing::Errors::LoadBalancerNotFound
+        end
+      end
+
       def get_route53_client(credentials, region)
         Aws::Route53::Client.new(region: region, credentials: credentials)
       end
