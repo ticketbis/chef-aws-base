@@ -1,6 +1,6 @@
 name 'aws-base'
 maintainer 'Alberto Tablado'
-maintainer_email 'alberto@aluki.org'
+maintainer_email 'alberto.tablado@ticketbis.com'
 license 'GPL v3'
 description 'Base recipe for working with Amazon AWS'
 long_description IO.read(File.join(
